@@ -34,14 +34,14 @@
 
 <body>
     <!-- Navbar -->
-    {{-- @include('partials.navbar') --}}
+    @include('partials.navbar')
     <!-- End Navbar -->
 
     <!-- Sidebar -->
     {{-- @include('partials.sidebar') --}}
 
     <main id="main" class="main">
-        @yield('main')  
+        @yield('main')
     </main>
     <!-- End #main -->
 
@@ -51,6 +51,37 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Modal Log Out -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirm Log Out</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Logout
+                </div>
+                <div class="modal-footer">
+                    <!-- Tombol Cancel -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                    <!-- Tombol Logout -->
+                    <a class="btn btn-primary" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                                 document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                    </a>
+
+                    <!-- Form untuk Logout -->
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Vendor JS Files -->
     <script src="{{ asset('niceadmin/vendor/apexcharts/apexcharts.min.js') }}"></script>

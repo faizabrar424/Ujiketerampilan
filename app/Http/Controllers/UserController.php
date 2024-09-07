@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\Return_;
 
-class UploadController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Produk::all();
-        return view('upload/tampil', compact('data'));
+        $data = User::all();
+        // dd($data);
+        return view('user', compact('data'));
     }
 
     /**
@@ -45,7 +48,9 @@ class UploadController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = User::find($id);
+        $role = Role::all();
+        return view('edituser', compact('data', 'role'));
     }
 
     /**
@@ -53,7 +58,13 @@ class UploadController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = $request->validate([
+            'role_id' => 'required|integer',
+        ]);
+       
+        User::find($id)->update($validator);
+        return redirect('user');
+        // dd($validator);
     }
 
     /**

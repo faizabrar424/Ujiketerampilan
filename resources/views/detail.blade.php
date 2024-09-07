@@ -1,6 +1,5 @@
 @extends('template')
 @section('main')
-    @include('partials.navbaruser')
     <section>
         <div class="row">
             <div class="col-xl-8">
@@ -26,8 +25,7 @@
                                 <div class="card-body text-start">
                                     <h5 class="card-title">{{ $item->namaProduk }}</h5>
                                     <div class="d-flex justify-content-center">
-                                        <img src="{{ asset('niceadmin/img/card.jpg') }}" alt="{{ $item->nama_produk }}"
-                                            style="width: 150px; margin-bottom: 1rem;">
+                                        <img src="{{ asset('storage/' . $item->foto) }}" width="150" alt="Foto Produk">
                                     </div>
                                     <h5 class="fw-bold">Rp.{{ number_format($item->harga, 0, ',', '.') }}</h5>
                                     <h5 class="text-success small pt-1 fw-bold mb-0">{{ $item->descProduk }}</h5>

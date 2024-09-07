@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
@@ -22,7 +23,8 @@ class ProdukController extends Controller
      */
     public function create()
     {
-        return view('tambahproduk');
+        $kategori = Kategori::all();
+        return view('tambahproduk', compact('kategori'));
     }
 
     /**
@@ -32,31 +34,27 @@ class ProdukController extends Controller
     {
         $validator = $request->validate([
             'namaProduk' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto' => 'required',
             'harga' => 'required|integer',
             'descProduk' => 'required|string',
+            'kategori_id' => 'required|integer'
         ]);
 
-        $path = $request->file('foto')->store('img', 'public');
-
-        $validator['foto'] = $path;
+        $validator['foto'] = $request->file('foto')->store('img', 'public');
 
         Produk::create($validator);
-
-        return redirect('produk')->with('success', 'Produk berhasil ditambahkan.');
+        return redirect('produk');
     }
-
-
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $kategori = Kategori::findOrFail($id);
-        $produk = $kategori->produk;
+        // $kategori = Kategori::findOrFail($id);
+        // $produk = $kategori->produk;
 
-        return view('detail', compact('kategori', 'produk'));
+        // return view('detail', compact('kategori', 'produk'));
     }
 
     /**
@@ -64,7 +62,10 @@ class ProdukController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = Produk::find($id);
+        $kategori = Kategori::all();
+
+        return view('editproduk', compact('data', 'kategori'));
     }
 
     /**
@@ -72,7 +73,30 @@ class ProdukController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validasi input, foto dibuat nullable agar bisa opsional
+        $validator = $request->validate([
+            'namaProduk' => 'required|string',
+            'foto' => 'required',
+            'harga' => 'required|numeric',
+            'descProduk' => 'required|string',
+            'kategori_id' => 'required|integer'
+        ]);
+
+        $produk = Produk::find($id);
+        if ($request->hasFile('foto')) {
+            if ($produk->foto) {
+                Storage::disk('public')->delete($produk->foto);
+            }
+
+            $validator['foto'] = $request->file('foto')->store('img', 'public');
+        } else {
+            unset($validator['foto']);
+        }
+
+        $produk->update($validator);
+
+        // dd($validator);
+        return redirect('produk');
     }
 
     /**
@@ -80,6 +104,14 @@ class ProdukController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $produk = Produk::find($id);
+
+        if ($produk) {
+            if ($produk->foto) {
+                Storage::disk('public')->delete($produk->foto);
+            }
+            $produk->delete();
+        }
+        return redirect('produk');
     }
 }

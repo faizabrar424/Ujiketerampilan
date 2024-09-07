@@ -1,6 +1,5 @@
 @extends('template')
 @section('main')
-    @include('partials.navbar')
     @include('partials.sidebar')
     <h1>Halaman Produk</h1>
     <section class="section">
@@ -17,6 +16,8 @@
                                 <th scope="col">Foto</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Deskripsi Produk</th>
+                                <th scope="col">Kategori</th>
+                                <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,12 +26,13 @@
                                     <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $item->namaProduk }}</td>
                                     <td>
-                                        <img src="{{ asset('storage/' . $item->foto) }}" width="300" alt="Foto Produk">
+                                        <img src="{{ asset('storage/' . $item->foto) }}" width="50" alt="Foto Produk">
                                     </td>
-                                    <td>{{ $item->harga }}</td>
+                                    <td>Rp.{{ number_format($item->harga, 0, ',', '.') }}</td>
                                     <td>{{ $item->descProduk }}</td>
+                                    <td>{{ $item->kategori->namaKategori }}</td>
                                     <td>
-                                        <a href="{{ route('kategori.edit', $item->id) }}" class="btn btn-warning">Update</a>
+                                        <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-warning">Update</a>
                                         <form action="{{ route('produk.destroy', $item->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')

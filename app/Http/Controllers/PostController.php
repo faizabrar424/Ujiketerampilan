@@ -14,15 +14,9 @@ class PostController extends Controller
     public function index()
     {
         $data = Post::all();
-        return view('beranda', compact('data'));
+        return view('post', compact('data'));
     }
-    public function showUserData()
-    {
-        $data = Post::take(3)->get(); // Mengambil hanya 3 item dari model Post
-        return view('tampilanuser', compact('data'));
-    }
-
-
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -52,9 +46,7 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $data = Post::find($id);
-        $produk = $data->kategori->produk;
-        return view('detail', compact('data', 'produk'));
+       //
     }
 
     /**
